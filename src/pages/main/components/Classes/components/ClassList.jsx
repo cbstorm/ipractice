@@ -18,7 +18,7 @@ const ClassList = ({ listClasses, title, pending, emptyText }) => {
             <Typography variant='h5' component='h5'>
                 {title}
             </Typography>
-            {!listClasses?.length && <EmptyText text={emptyText} />}
+            {!listClasses?.length && !pending && <EmptyText text={emptyText} />}
             <Container className={classes.classList}>
                 <Grid container spacing={4} className={classes.list}>
                     {listClasses?.length > 0 &&

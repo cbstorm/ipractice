@@ -13,7 +13,7 @@ const MyPracticeList = () => {
     const dispatch = useDispatch();
     const limit = 5;
     const practiceList = useSelector(practiceListSelector);
-    const [isPending, setPending] = useState(false);
+    const [pending, setPending] = useState(false);
     const [page, setPage] = useState(0);
     const [exhausted, setExhausted] = useState(true);
     const [errorResponse, setErrorResponse] = useState();
@@ -60,12 +60,12 @@ const MyPracticeList = () => {
             <PracticeList
                 title='Bài tập của bạn'
                 practiceList={practiceList}
-                pending={isPending}
+                pending={pending}
                 exhausted={exhausted}
                 errorResponse={errorResponse}
                 onLoadmore={handleLoadmore}
             />
-            {practiceList?.length === 0 && (
+            {!pending && practiceList?.length === 0 && (
                 <EmptyText text='Bạn chưa có bài tập nào cả' />
             )}
         </>

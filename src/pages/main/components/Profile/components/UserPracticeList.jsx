@@ -19,14 +19,14 @@ const UserPracticeList = () => {
     const [practiceList, setPracticeList] = useState([]);
     const [isPending, setPending] = useState(false);
     const [page, setPage] = useState(0);
-    const [exhausted, setExhausted] = useState(false);
+    const [exhausted, setExhausted] = useState(true);
     const [errorResponse, setErrorResponse] = useState();
     const handleLoadmore = () => {
         getUserPracticeListHandler(page, limit);
     };
 
     const getUserPracticeListHandler = async (page, limit) => {
-        setPending(() => true);
+        setPending(true);
         const response = await getUserPracticeList(userId, page, limit);
         if (response.data.status === FAILURE) {
             setErrorResponse((prev) => {
@@ -37,11 +37,11 @@ const UserPracticeList = () => {
         setPracticeList((prev) => {
             return [...prev, ...response.data.data];
         });
-        if (response.data.data.length < limit) {
-            setExhausted(() => true);
+        if (!response.data.data.length < limit) {
+            setExhausted(false);
         }
         setPage((page) => page + 1);
-        setPending(() => false);
+        setPending(false);
     };
 
     useEffect(() => {
