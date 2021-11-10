@@ -5,7 +5,7 @@
 /.pnp
 .pnp.js
 .prettierrc
-# /src/utils/OAuth.config.js
+/src/utils/OAuth.config.js
 
 # testing
 /coverage
