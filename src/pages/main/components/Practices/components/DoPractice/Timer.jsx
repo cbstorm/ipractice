@@ -1,7 +1,7 @@
 import { LinearProgress, Typography, withStyles } from '@material-ui/core';
 import { AccessAlarm } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/styles';
-import React, { useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 
 const BorderLinearProgress = withStyles((theme) => ({
     root: {
@@ -80,4 +80,4 @@ const Timer = ({ timeLimited, handleFinish }) => {
     );
 };
 
-export default Timer;
+export default memo(Timer);
