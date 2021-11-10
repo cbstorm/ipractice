@@ -11,10 +11,16 @@ import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { EMAIL_EXISTED, SERVER_ERROR } from '../../../constant';
+import {
+    EMAIL_EXISTED,
+    FAILURE,
+    SERVER_ERROR,
+    SUCCESS,
+} from '../../../constant';
 import { registerAction } from '../../../redux/reducers/auth.reducer';
 import { registerSchema } from '../../../validateSchemas';
 import ErrorMessage from '../../main/commonComponents/ErrorMessage';
+import PendingSpinner from '../../main/commonComponents/PendingSpinner';
 
 const useStyle = makeStyles((theme) => ({
     root: {
@@ -44,6 +50,7 @@ export default function RegisterForm() {
     const classes = useStyle();
     const dispatch = useDispatch();
     const history = useHistory();
+    const [pending, setPending] = useState(false);
     const [errorResponse, setErrorResponse] = useState();
     const handleInput = () => {
         setErrorResponse(() => {
@@ -55,17 +62,19 @@ export default function RegisterForm() {
     };
 
     const onSubmit = (data) => {
+        setPending(true);
         dispatch(registerAction(data)).then((result) => {
-            if (result.payload.status === 'failure') {
+            if (result.payload.status === FAILURE) {
                 setErrorResponse(() => {
                     return { ...errorResponse, ...result.payload.data };
                 });
                 return;
             }
-            if (result.payload.status === 'success') {
+            if (result.payload.status === SUCCESS) {
                 history.push('/main');
                 return;
             }
+            setPending(false);
         });
     };
 
@@ -195,6 +204,7 @@ export default function RegisterForm() {
                 >
                     Đăng ký
                 </Button>
+                {pending && <PendingSpinner size={30} />}
                 {errorResponse?.errorMessage === SERVER_ERROR && (
                     <ErrorMessage errorMessage='Server đang gặp lỗi' />
                 )}

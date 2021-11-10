@@ -1,14 +1,15 @@
-import { Button, Typography } from '@material-ui/core';
+import { Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import React, { useState } from 'react';
 import { GoogleLogin } from 'react-google-login';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { GoogleLogo } from '../../../assets';
-import { SERVER_ERROR } from '../../../constant';
+import { FAILURE, SERVER_ERROR, SUCCESS } from '../../../constant';
 import { loginWithGoogleAction } from '../../../redux/reducers/auth.reducer';
 import { GOOGLE_CLIENT_ID } from '../../../utils';
 import ErrorMessage from '../../main/commonComponents/ErrorMessage';
+import PendingSpinner from '../../main/commonComponents/PendingSpinner';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -22,19 +23,22 @@ export default function GoogleLoginButton() {
     const classes = useStyles();
     const dispatch = useDispatch();
     const history = useHistory();
+    const [pending, setPending] = useState(false);
     const [errorResponse, setErrorResponse] = useState();
 
     const responseGoogle = (response) => {
+        setPending(true);
         if (response.tokenId) {
             dispatch(loginWithGoogleAction(response.tokenId)).then((result) => {
-                if (result.payload.status === 'success') {
+                if (result.payload.status === SUCCESS) {
                     history.push('/main');
                 }
-                if (result.payload.status === 'failure') {
+                if (result.payload.status === FAILURE) {
                     setErrorResponse((prev) => {
                         return { ...prev, ...result.payload.data };
                     });
                 }
+                setPending(false);
             });
         }
     };
@@ -56,12 +60,9 @@ export default function GoogleLoginButton() {
                 onFailure={responseGoogle}
                 cookiePolicy='single_host_origin'
             />
-            {errorResponse && (
-                <Typography color='error' component='span'>
-                    {errorResponse?.errorMessage === SERVER_ERROR && (
-                        <ErrorMessage errorMessage='Server đang gặp lỗi' />
-                    )}
-                </Typography>
+            {pending && <PendingSpinner size={30} />}
+            {errorResponse && errorResponse?.errorMessage === SERVER_ERROR && (
+                <ErrorMessage errorMessage='Server đang gặp lỗi' />
             )}
         </div>
     );

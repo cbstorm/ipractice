@@ -8,13 +8,16 @@ import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import {
     EMAIL_NOT_EXISTED,
+    FAILURE,
     LOGIN_BY_GOOGLE,
     PWD_NOT_CORRECT,
     SERVER_ERROR,
+    SUCCESS,
 } from '../../../constant';
 import { loginAction } from '../../../redux/reducers/auth.reducer';
 import { loginSchema } from '../../../validateSchemas';
 import ErrorMessage from '../../main/commonComponents/ErrorMessage';
+import PendingSpinner from '../../main/commonComponents/PendingSpinner';
 
 const useStyle = makeStyles((theme) => ({
     root: {
@@ -49,6 +52,7 @@ export default function LoginForm() {
 
     const dispatch = useDispatch();
     const history = useHistory();
+    const [pending, setPending] = useState(false);
     const [errorResponse, setErrorResponse] = useState();
     const handleInput = () => {
         setErrorResponse(() => {
@@ -60,17 +64,19 @@ export default function LoginForm() {
     };
 
     const onSubmit = (data) => {
+        setPending(true);
         dispatch(loginAction(data)).then((result) => {
-            if (result.payload.status === 'failure') {
+            if (result.payload.status === FAILURE) {
                 setErrorResponse(() => {
                     return { ...errorResponse, ...result.payload.data };
                 });
                 return;
             }
-            if (result.payload.status === 'success') {
+            if (result.payload.status === SUCCESS) {
                 history.push('/main');
                 return;
             }
+            setPending(false);
         });
     };
 
@@ -173,6 +179,7 @@ export default function LoginForm() {
                 >
                     Đăng nhập
                 </Button>
+                {pending && <PendingSpinner size={30} />}
                 {errorResponse?.errorMessage === SERVER_ERROR && (
                     <ErrorMessage errorMessage='Server đang gặp lỗi' />
                 )}
