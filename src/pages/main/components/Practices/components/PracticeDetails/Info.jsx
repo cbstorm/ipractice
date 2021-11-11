@@ -1,11 +1,10 @@
-import { Box, IconButton, makeStyles, Typography } from '@material-ui/core';
+import { IconButton, makeStyles, Typography } from '@material-ui/core';
 import {
     AccessAlarm,
     EqualizerOutlined,
     HelpOutline,
     PlayArrow,
 } from '@material-ui/icons';
-import Rating from '@material-ui/lab/Rating';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
@@ -37,9 +36,13 @@ const useStyles = makeStyles((theme) => ({
         flexWrap: 'wrap',
         justifyContent: 'space-between',
     },
+    item: {
+        width: '33.3%',
+        display: 'flex',
+        justifyContent: 'center',
+    },
     titleContainer: {
-        padding: theme.spacing(2),
-        maxWidth: '33.3%',
+        width: '100%',
         [theme.breakpoints.down('md')]: {
             maxWidth: '50%',
         },
@@ -48,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
         marginTop: theme.spacing(2),
         color: theme.palette.grey[200],
         fontWeight: 500,
-        textShadow: '1px 1px 10px #555',
+        fontSize: 16,
         [theme.breakpoints.down('md')]: {
             fontSize: 14,
         },
@@ -58,11 +61,10 @@ const useStyles = makeStyles((theme) => ({
     },
     title: {
         fontWeight: 700,
-        textShadow: '1px 1px 10px #555',
         color: theme.palette.grey[100],
         fontSize: 22,
         [theme.breakpoints.down('md')]: {
-            fontSize: 16,
+            fontSize: 18,
         },
         [theme.breakpoints.down('sm')]: {
             fontSize: 14,
@@ -70,14 +72,15 @@ const useStyles = makeStyles((theme) => ({
     },
     playBtn: {
         backgroundColor: theme.palette.primary.light,
-        width: 100,
-        height: 100,
+        width: 120,
+        height: 120,
         border: '5px solid #2a348e',
         color: '#fff',
         transition: 'all ease-in .2s',
         '&:hover': {
             backgroundColor: theme.palette.primary.main,
             color: theme.palette.grey[200],
+            border: '5px solid #618cfb',
         },
     },
     subInfo: {
@@ -106,6 +109,10 @@ const useStyles = makeStyles((theme) => ({
         width: '100%',
         marginTop: theme.spacing(3),
         marginBottom: theme.spacing(3),
+    },
+    emptyDiv: {
+        opacity: 0,
+        visibility: 0,
     },
 }));
 
@@ -152,24 +159,28 @@ const Info = ({ practiceId }) => {
     return (
         <div className={classes.root}>
             <div className={classes.info}>
-                <div className={classes.titleContainer}>
-                    <User userProfile={practiceData?.creator} />
-                    <Typography className={classes.subTitle}>
-                        {getCategory(practiceData?.category)}
-                    </Typography>
-                    <Typography className={classes.title}>
-                        {practiceData?.title}
-                    </Typography>
+                <div className={classes.item}>
+                    <div className={classes.titleContainer}>
+                        <User userProfile={practiceData?.creator} />
+                        <Typography className={classes.subTitle}>
+                            {getCategory(practiceData?.category)}
+                        </Typography>
+                        <Typography className={classes.title}>
+                            {practiceData?.title}
+                        </Typography>
+                    </div>
                 </div>
-
-                <IconButton
-                    className={classes.playBtn}
-                    onClick={handlePlay}
-                    aria-label='play'
-                >
-                    <PlayArrow />
-                </IconButton>
-                <Box component='fieldset' borderColor='transparent'>
+                <div className={classes.item}>
+                    <IconButton
+                        className={classes.playBtn}
+                        onClick={handlePlay}
+                        aria-label='play'
+                    >
+                        <PlayArrow />
+                    </IconButton>
+                </div>
+                <div className={`${classes.item} ${classes.emptyDiv}`}>#</div>
+                {/* <Box component='fieldset' borderColor='transparent'>
                     <Rating
                         name='simple-controlled'
                         value={value}
@@ -177,7 +188,7 @@ const Info = ({ practiceId }) => {
                             setValue(newValue);
                         }}
                     />
-                </Box>
+                </Box> */}
             </div>
             <div className={classes.subInfo}>
                 <div className={classes.infoItem}>
