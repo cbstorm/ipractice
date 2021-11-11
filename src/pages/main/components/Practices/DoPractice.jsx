@@ -34,7 +34,6 @@ const DoPractice = () => {
         _id: '',
     });
     const [currentQuestion, setCurrentQuestion] = useState(0);
-    const [answerCount, setAnswerCount] = useState(0);
     const [answerCorrectCount, setAnswerCorrectCount] = useState(0);
     const [finished, setFinish] = useState(false);
     const [expired, setExpire] = useState(false);
@@ -58,24 +57,11 @@ const DoPractice = () => {
 
     const handleCount = (isCorrect) => {
         if (isCorrect) {
-            setAnswerCount((count) => count + 1);
             setAnswerCorrectCount((count) => count + 1);
             return;
         }
-        setAnswerCount((count) => count + 1);
     };
 
-    const handleInCorrectAnswer = () => {
-        setPracticeData((prev) => {
-            return {
-                ...prev,
-                questionList: [
-                    ...prev.questionList,
-                    prev.questionList[currentQuestion],
-                ],
-            };
-        });
-    };
     const handleNextQuestion = () => {
         setCurrentQuestion((cur) => cur + 1);
     };
@@ -117,14 +103,13 @@ const DoPractice = () => {
                 <DoPracticeMain
                     {...practiceData.questionList[currentQuestion]}
                     handleNextQuestion={handleNextQuestion}
-                    handleInCorrectAnswer={handleInCorrectAnswer}
                     handleCount={handleCount}
                 />
             )}
             {finished && (
                 <Finish
+                    questionCount={practiceData.questionList.length}
                     practiceId={practiceData._id}
-                    answerCount={answerCount}
                     answerCorrectCount={answerCorrectCount}
                     expired={expired}
                 />

@@ -7,7 +7,6 @@ import { useHistory } from 'react-router-dom';
 import { GoogleLogo } from '../../../assets';
 import { FAILURE, SERVER_ERROR, SUCCESS } from '../../../constant';
 import { loginWithGoogleAction } from '../../../redux/reducers/auth.reducer';
-import { GOOGLE_CLIENT_ID } from '../../../utils';
 import ErrorMessage from '../../main/commonComponents/ErrorMessage';
 import PendingSpinner from '../../main/commonComponents/PendingSpinner';
 
@@ -41,12 +40,13 @@ export default function GoogleLoginButton() {
                 setPending(false);
             });
         }
+        setPending(false);
     };
 
     return (
         <div className={classes.root}>
             <GoogleLogin
-                clientId={GOOGLE_CLIENT_ID}
+                clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
                 render={(renderProps) => (
                     <Button
                         onClick={renderProps.onClick}

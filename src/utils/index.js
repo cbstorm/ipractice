@@ -6,5 +6,4 @@ export * from './createQuestion';
 export * from './decode';
 export * from './handleError';
 export * from './notification.util';
-export * from './OAuth.config';
 export * from './practice';

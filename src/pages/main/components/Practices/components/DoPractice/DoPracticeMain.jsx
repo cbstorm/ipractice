@@ -53,7 +53,6 @@ const DoPracticeMain = ({
     type,
     correctAnswers,
     handleNextQuestion,
-    handleInCorrectAnswer,
     handleCount,
 }) => {
     const classes = useStyles();
@@ -85,7 +84,6 @@ const DoPracticeMain = ({
         } else {
             setSubmit(true);
             setCorrect(false);
-            handleInCorrectAnswer();
         }
         handleCount(isCorrect);
     };

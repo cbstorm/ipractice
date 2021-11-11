@@ -35,12 +35,6 @@ const Timer = ({ timeLimited, handleFinish }) => {
             setSecond((second) => {
                 if (second === 0) {
                     setMinute((minute) => {
-                        if (minute === 0 && second === 0) {
-                            handleFinish(true);
-                            setSecond(() => 0);
-                            clearInterval(timer);
-                            return 0;
-                        }
                         return minute - 1;
                     });
                     return 59;
@@ -59,7 +53,7 @@ const Timer = ({ timeLimited, handleFinish }) => {
         }, 1000);
 
         return () => {
-            clearInterval(timer);
+            return clearInterval(timer);
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);

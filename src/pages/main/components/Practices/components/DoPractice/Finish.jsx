@@ -11,6 +11,7 @@ import { updateRecord } from '../../../../../../apis';
 import { Education, Expired, Trophy, Try } from '../../../../../../assets';
 import { FAILURE, wsEvent } from '../../../../../../constant';
 import { socketSelector } from '../../../../../../redux/reducers/socketio.reducer';
+import ErrorMessage from '../../../../commonComponents/ErrorMessage';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -32,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const Finish = ({ practiceId, answerCount, answerCorrectCount, expired }) => {
+const Finish = ({ practiceId, questionCount, answerCorrectCount, expired }) => {
     const classes = useStyles();
     const history = useHistory();
     const [errorResponse, setErrorResponse] = useState();
@@ -43,11 +44,11 @@ const Finish = ({ practiceId, answerCount, answerCorrectCount, expired }) => {
     const updateRecordHandler = async () => {
         setPending(true);
         const response = await updateRecord(practiceId, {
-            avgRatio: Math.floor((answerCorrectCount / answerCount) * 100),
+            avgRatio: Math.floor((answerCorrectCount / questionCount) * 100),
         });
-        if (response?.data.status === FAILURE) {
+        if (response.data.status === FAILURE) {
             setErrorResponse((prev) => {
-                return { ...prev, ...response.data };
+                return { ...prev, ...response.data.data };
             });
             return;
         }
@@ -84,18 +85,18 @@ const Finish = ({ practiceId, answerCount, answerCorrectCount, expired }) => {
                     >
                         Chúc mừng bạn!
                     </Typography>
-                    {answerCount === answerCorrectCount && (
+                    {questionCount === answerCorrectCount && (
                         <img className={classes.img} src={Trophy} alt='img' />
                     )}
-                    {answerCount / 2 <= answerCorrectCount &&
-                        answerCorrectCount < answerCount && (
+                    {questionCount / 2 <= answerCorrectCount &&
+                        answerCorrectCount < questionCount && (
                             <img
                                 className={classes.img}
                                 src={Education}
                                 alt='img'
                             />
                         )}
-                    {answerCount / 2 > answerCorrectCount && (
+                    {questionCount / 2 > answerCorrectCount && (
                         <img className={classes.img} src={Try} alt='img' />
                     )}
                     <Typography
@@ -104,7 +105,8 @@ const Finish = ({ practiceId, answerCount, answerCorrectCount, expired }) => {
                         className={classes.result}
                     >
                         Tỉ lệ trả lời đúng của bạn là{' '}
-                        {Math.floor((answerCorrectCount / answerCount) * 100)} %
+                        {Math.floor((answerCorrectCount / questionCount) * 100)}{' '}
+                        %
                     </Typography>
                 </>
             )}
@@ -124,16 +126,12 @@ const Finish = ({ practiceId, answerCount, answerCorrectCount, expired }) => {
                         component='h6'
                         className={classes.result}
                     >
-                        Bạn đã trả lời đúng {answerCorrectCount}/{answerCount}{' '}
-                        số lần trả lời!
+                        Bạn đã trả lời đúng {answerCorrectCount}/{questionCount}{' '}
+                        câu hỏi!
                     </Typography>
                 </>
             )}
-            {errorResponse?.data?.errorMessage && (
-                <Typography component='span' color='error'>
-                    Có lỗi xảy ra: {errorResponse?.data.errorMessage}
-                </Typography>
-            )}
+            {errorResponse && <ErrorMessage />}
             <Button
                 onClick={handleContinue}
                 variant='contained'
